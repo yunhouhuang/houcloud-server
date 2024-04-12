@@ -1,0 +1,3 @@
+com.houcloud.example.common.mybatis.MybatisPlusConfiguration
+com.houcloud.example.common.mybatis.MybatisPlusAutoFillConfiguration
+com.houcloud.example.common.oss.OssAutoConfiguration

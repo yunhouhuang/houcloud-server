@@ -1,0 +1,43 @@
+server:
+  port: 1027
+spring:
+  application:
+    name: "HOUCLOUD快速开发基础套件服务端"
+  jackson:
+#    default-property-inclusion: non_null
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active: @env@
+# 阿里云OSS
+oss:
+  enable: true
+  domain: https://houcloud.oss-cn-guangzhou.aliyuncs.com
+  endpoint: oss-cn-guangzhou.aliyuncs.com
+  customDomain: https://files.houcloud.com
+  pathStyleAccess: false
+  accessKeyId: ${OSS_ACCESS_KEY_ID}
+  accessKeySecret: ${OSS_ACCESS_KEY_SECRET}
+  bucketName: houcloud
+  maxConnections: 100
+  isPrivate: false
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'admin'
+      display-name: "管理端"
+      paths-to-match: '/api/admin/**'
+      packages-to-scan: com.houcloud.example.controller.admin
+    - group: 'front'
+      display-name: "用户端"
+      paths-to-match: '/api/front/**'
+      packages-to-scan: com.houcloud.example.controller.front
+

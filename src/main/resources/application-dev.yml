@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 你的数据 IP 端口 数据库名, “127.0.0.1:3306/houcloud_db”
+    url: jdbc:mysql://127.0.0.1:3306/houcloud_db?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimeZone=GMT+8
+    # 你的数据库账户
+    username: root
+    # 你的数据库密码
+    password: root
+  data:
+    # redis 缓存数据库
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password:
+      database: 0
+logging:
+  level:
+    root: info
+    org.springframework.web: info
+
+# 图形验证码配置
+aj:
+  captcha:
+    water-mark: ''
+    cache-type: redis
+    jigsaw:
+
+# mybatis 配置
+mybatis-plus:
+# 配置slq打印日志 生产环境
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+message:
+  dingtalk:
+    hooks: https://oapi.dingtalk.com/robot/send?access_token=xxxx
+    enabled: false
+#  Swagger for knife4j 接口文档配置
+knife4j:
+  enable: true
+  setting:
+    language: zh-CN
+    enable-footer-custom: true
+    footer-custom-content: 2023 &copy; HOUCLOUD | YUNHOU·HUANG
+    enable-dynamic-parameter: false
+    enable-debug: true
+    enable-open-api: false
+    enable-group: true
+  cors: false
+  production: false

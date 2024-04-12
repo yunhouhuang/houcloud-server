@@ -1,0 +1,21 @@
+services:
+  app:
+    image: houcloud-server
+    hostname: houcloud-server
+    container_name: houcloud-server
+    environment:
+      - TZ=Asia/Shanghai
+    env_file:
+      - prod.env
+    restart: always
+    volumes:
+      - ./logs/:/houcloud-server/logs/
+      - /etc/localtime:/etc/localtime
+    ports:
+      - "1027:1027"
+networks:
+  default:
+    external: true
+    name: houcloud
+
+

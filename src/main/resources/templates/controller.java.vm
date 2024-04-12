@@ -1,0 +1,105 @@
+package ${package.Controller};
+
+import org.springframework.web.bind.annotation.RequestMapping;
+#if(${restControllerStyle})
+import org.springframework.web.bind.annotation.RestController;
+#else
+import org.springframework.stereotype.Controller;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+#if(${springdoc})
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+#end
+import org.springframework.web.bind.annotation.*;
+import jakarta.annotation.Resource;
+import ${package.Entity}.${entity};
+import ${package.Service}.${table.serviceName};
+import jakarta.validation.Valid;
+
+
+/**
+ * <p>
+ * $!{table.comment}接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${springdoc})
+@Tag(name = "$!{table.comment}接口")
+#end
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping("/api/${package.ModuleName}/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+        @Resource
+        private ${table.serviceName} ${table.entityPath}Service;
+
+        #if(${springdoc})
+        @Operation(summary = "获取$!{table.comment}详情")
+        #end
+        @GetMapping
+        public Result<${entity}> get${entity}(@RequestParam Long id){
+                ${entity} ${table.entityPath} = ${table.entityPath}Service.getById(id);
+                if (Objects.isNull(${table.entityPath})){
+                    return Result.noFound("$!{table.comment}未找到");
+                }
+                return Result.success(${table.entityPath});
+        }
+
+
+        #if(${springdoc})
+        @Operation(summary = "获取$!{table.comment}列表")
+        #end
+        @GetMapping("/list")
+        public Result<Page<${entity}>> get${entity}List(PageListParams params){
+                LambdaQueryWrapper<${entity}> wrapper = Wrappers.<${entity}>lambdaQuery().orderByDesc(${entity}::getCreatedAt);
+                if (StrUtil.isNotBlank(params.getKeywords())){
+                        // todo
+                }
+                Page<${entity}> ${table.entityPath}Page = ${table.entityPath}Service.page(Page.of(params.getPage(), params.getLimit()), wrapper);
+                return Result.success(${table.entityPath}Page);
+        }
+
+
+        @Operation(summary = "添加$!{table.comment}")
+        @PostMapping
+        public Result<${entity}> add${entity}(@RequestBody ${entity} ${table.entityPath}){
+                boolean save = ${table.entityPath}Service.save(${table.entityPath});
+                return save?Result.success(${table.entityPath}):Result.fail();
+        }
+
+        @Operation(summary = "更新$!{table.comment}")
+        @PutMapping
+        public Result<${entity}> update${entity}(@RequestBody ${entity} ${table.entityPath}){
+                boolean update = ${table.entityPath}Service.updateById(${table.entityPath});
+                return update?Result.success(${table.entityPath}):Result.fail();
+        }
+
+        @Operation(summary = "删除$!{table.comment}")
+        @DeleteMapping
+        public Result<Void> delete${entity}(@Valid @RequestBody IdBody<Long> idBody){
+                ${entity} ${table.entityPath} = ${table.entityPath}Service.getById(idBody.getId());
+                if (Objects.isNull(${table.entityPath})){
+                return Result.fail("$!{table.comment}不存在");
+                }
+                boolean deleted = ${table.entityPath}Service.removeById(${table.entityPath});
+                return deleted?Result.success():Result.fail();
+        }
+}
+#end
