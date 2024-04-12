@@ -1,8 +1,8 @@
 # HOUCLOUD快速开发基础套件 服务端JAVA版
 
-### [前端代码地址 https://gitee.com/houcloud/houcloud-admin](https://gitee.com/houcloud/houcloud-admin)
+### [前端代码地址 https://gitee.com/houcloud/admin](https://gitee.com/houcloud/admin)
 
-## [在线预览](https://houcloud-admin.houcloud.com)
+## [在线预览](https://admin.houcloud.com)
 ```text
 username: admin
 password: houcloud
