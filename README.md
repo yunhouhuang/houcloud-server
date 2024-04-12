@@ -50,13 +50,7 @@ password: houcloud
 ![page2.png](docs%2Fimages%2Fpage2.png)
 ![page3.png](docs%2Fimages%2Fpage3.png)
 ![page4.png](docs%2Fimages%2Fpage4.png)
-![page5.png](docs%2Fimages%2Fpage5.png)
-![page6.png](docs%2Fimages%2Fpage6.png)
 ---
 ### 写在最后
-
-#### 如果有需要可以联系我微信
-
-<img src="docs/images/IMG_4343.PNG" height="200" width="200" >
 
 点个星星🌟，让这个套件越来越好用～
