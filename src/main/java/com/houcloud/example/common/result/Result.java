@@ -1,7 +1,6 @@
 package com.houcloud.example.common.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.houcloud.example.common.result.ResultStatus;
 import com.houcloud.example.common.security.token.store.AuthContext;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
