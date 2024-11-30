@@ -1,24 +1,31 @@
 package ${package.Controller};
-
+import com.houcloud.example.common.result.Result;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.util.Objects;
 import org.springframework.web.bind.annotation.RequestMapping;
-#if(${restControllerStyle})
-import org.springframework.web.bind.annotation.RestController;
-#else
-import org.springframework.stereotype.Controller;
-#end
-#if(${superControllerClassPackage})
-import ${superControllerClassPackage};
-#end
-#if(${springdoc})
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-#end
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.houcloud.example.model.request.IdBody;
+import com.houcloud.example.model.request.PageListParams;
+        #if(${restControllerStyle})
+        import org.springframework.web.bind.annotation.RestController;
+        #else
+        import org.springframework.stereotype.Controller;
+        #end
+        #if(${superControllerClassPackage})
+        import ${superControllerClassPackage};
+        #end
+        #if(${springdoc})
+        import io.swagger.v3.oas.annotations.Operation;
+        import io.swagger.v3.oas.annotations.tags.Tag;
+        #end
 import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
 import jakarta.validation.Valid;
-
 
 /**
  * <p>
@@ -38,14 +45,14 @@ import jakarta.validation.Valid;
 #end
 @RequestMapping("/api/${package.ModuleName}/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
 #if(${kotlin})
-class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+        class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
 
 #else
-#if(${superControllerClass})
-public class ${table.controllerName} extends ${superControllerClass} {
-#else
-public class ${table.controllerName} {
-#end
+        #if(${superControllerClass})
+                public class ${table.controllerName} extends ${superControllerClass} {
+        #else
+                public class ${table.controllerName} {
+        #end
 
         @Resource
         private ${table.serviceName} ${table.entityPath}Service;
@@ -53,28 +60,28 @@ public class ${table.controllerName} {
         #if(${springdoc})
         @Operation(summary = "获取$!{table.comment}详情")
         #end
-        @GetMapping
-        public Result<${entity}> get${entity}(@RequestParam Long id){
-                ${entity} ${table.entityPath} = ${table.entityPath}Service.getById(id);
-                if (Objects.isNull(${table.entityPath})){
-                    return Result.noFound("$!{table.comment}未找到");
-                }
-                return Result.success(${table.entityPath});
+@GetMapping
+public Result<${entity}> get${entity}(@RequestParam Long id){
+        ${entity} ${table.entityPath} = ${table.entityPath}Service.getById(id);
+        if (Objects.isNull(${table.entityPath})){
+                return Result.notfound("$!{table.comment}未找到");
         }
+        return Result.success(${table.entityPath});
+}
 
 
         #if(${springdoc})
         @Operation(summary = "获取$!{table.comment}列表")
         #end
-        @GetMapping("/list")
-        public Result<Page<${entity}>> get${entity}List(PageListParams params){
-                LambdaQueryWrapper<${entity}> wrapper = Wrappers.<${entity}>lambdaQuery().orderByDesc(${entity}::getCreatedAt);
-                if (StrUtil.isNotBlank(params.getKeywords())){
-                        // todo
-                }
-                Page<${entity}> ${table.entityPath}Page = ${table.entityPath}Service.page(Page.of(params.getPage(), params.getLimit()), wrapper);
-                return Result.success(${table.entityPath}Page);
+@GetMapping("/list")
+public Result<IPage<${entity}>> get${entity}List(PageListParams params){
+        LambdaQueryWrapper<${entity}> wrapper = Wrappers.<${entity}>lambdaQuery().orderByDesc(${entity}::getCreatedAt);
+        if (StrUtil.isNotBlank(params.getKeywords())){
+                // todo
         }
+        IPage<${entity}> ${table.entityPath}Page = ${table.entityPath}Service.page(Page.of(params.getPage(), params.getLimit()), wrapper);
+        return Result.success(${table.entityPath}Page);
+}
 
 
         @Operation(summary = "添加$!{table.comment}")
@@ -87,8 +94,8 @@ public class ${table.controllerName} {
         @Operation(summary = "更新$!{table.comment}")
         @PutMapping
         public Result<${entity}> update${entity}(@RequestBody ${entity} ${table.entityPath}){
-                boolean update = ${table.entityPath}Service.updateById(${table.entityPath});
-                return update?Result.success(${table.entityPath}):Result.fail();
+                boolean updated = ${table.entityPath}Service.updateById(${table.entityPath});
+                return updated?Result.success(${table.entityPath}):Result.fail();
         }
 
         @Operation(summary = "删除$!{table.comment}")
@@ -96,7 +103,7 @@ public class ${table.controllerName} {
         public Result<Void> delete${entity}(@Valid @RequestBody IdBody<Long> idBody){
                 ${entity} ${table.entityPath} = ${table.entityPath}Service.getById(idBody.getId());
                 if (Objects.isNull(${table.entityPath})){
-                return Result.fail("$!{table.comment}不存在");
+                        return Result.fail("$!{table.comment}不存在");
                 }
                 boolean deleted = ${table.entityPath}Service.removeById(${table.entityPath});
                 return deleted?Result.success():Result.fail();
