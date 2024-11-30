@@ -10,12 +10,29 @@ import java.util.Objects;
 /**
  * 线程会话缓存/存储线程中的用户信息 ThreadLocal Util
  *
- * @author <a href="mailto:yunhouhuang@gmail.com">yunhouhuang@gmail.com</a> 
+ * @author <a href="mailto:yunhouhuang@gmail.com">yunhouhuang@gmail.com</a>
  */
 @Slf4j
-public class AuthUtil {
-
+public class AuthContext {
+    private static final ThreadLocal<String> TraceId = new ThreadLocal<>();
     private static final ThreadLocal<ContextUser> CONTEXT_USER = new ThreadLocal<>();
+
+
+    /**
+     * 设置链路ID
+     *
+     * @param traceId 链路ID
+     */
+    public static void setTraceId(String traceId) {
+        TraceId.set(traceId);
+    }
+
+    /**
+     * 获取链路ID
+     */
+    public static String getTraceId() {
+        return TraceId.get();
+    }
 
 
     public static void clearContextUser() {
@@ -76,15 +93,16 @@ public class AuthUtil {
      */
     public static Long getUserId() {
         ContextUser contextUser = getContextUser();
-        if (Objects.isNull(contextUser)){
+        if (Objects.isNull(contextUser)) {
             throw BusinessException.exception(401, "请先登录");
         }
-        Long userId =contextUser.getUserId();
+        Long userId = contextUser.getUserId();
         if (ObjectUtil.isNull(userId)) {
             throw BusinessException.exception(401, "请先登录");
         }
         return userId;
     }
+
     /**
      * 获取用户ID，允许为空
      *
@@ -92,19 +110,20 @@ public class AuthUtil {
      */
     public static Long tryGetUserId() {
         ContextUser contextUser = getContextUser();
-        if (Objects.isNull(contextUser)){
+        if (Objects.isNull(contextUser)) {
             return null;
         }
         return contextUser.getUserId();
     }
-  /**
+
+    /**
      * 获取管理员ID，允许为空
      *
      * @return null or id
      */
     public static Long tryGetAdminId() {
         ContextUser contextUser = getContextUser();
-        if (Objects.isNull(contextUser)){
+        if (Objects.isNull(contextUser)) {
             return null;
         }
         return contextUser.getAdminId();
@@ -113,12 +132,13 @@ public class AuthUtil {
 
     /**
      * 检查当前登录的对象是否有某个权限
+     *
      * @param permission 权限编码
      * @return 是否有此权限
      */
     public static boolean hasPermission(String permission) {
         ContextUser contextUser = getContextUserThrow();
-        if (CollUtil.isEmpty(contextUser.getPermissions())){
+        if (CollUtil.isEmpty(contextUser.getPermissions())) {
             return false;
         }
         return contextUser.getPermissions().contains(permission);
