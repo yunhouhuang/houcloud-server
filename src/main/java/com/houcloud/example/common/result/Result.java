@@ -1,8 +1,11 @@
 package com.houcloud.example.common.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.houcloud.example.common.result.ResultStatus;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,6 +17,7 @@ import java.io.Serializable;
  * @author Houcloud
  */
 @Data
+@Slf4j
 @Schema(description = "响应参数")
 public class Result<T> implements Serializable {
 
@@ -92,7 +96,7 @@ public class Result<T> implements Serializable {
         return new Result<>(status.getCode(), status.getMessage(), true);
     }
 
-    public static Result<Void> success(String message) {
+    public static <T> Result<T> success(String message) {
         return new Result<>(ResultStatus.SUCCESS.getCode(), message, true);
     }
 
@@ -105,68 +109,73 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> fail() {
-        System.out.println("业务异常响应: 失败");
+        log.warn("业务异常响应: FAIL");
         return new Result<>(ResultStatus.FAIL.getCode(), ResultStatus.FAIL.getMessage(), false);
     }
 
     public static <T> Result<T> fail(ResultStatus status) {
+        log.warn("业务异常响应: [{}] {}", status.getCode(), status.getMessage());
         return new Result<>(status.getCode(), status.getMessage(), false);
     }
 
     public static <T> Result<T> fail(String message) {
-        System.out.println("业务异常响应: " + message);
+        log.warn("业务异常响应: {}", message);
         return new Result<>(ResultStatus.FAIL.getCode(), message, false);
     }
 
     public static <T> Result<T> fail(Integer code, String message) {
-        System.out.println("业务异常响应: " + message);
+        log.warn("业务异常响应: [{}] {}", code, message);
         return new Result<>(code, message, false);
     }
 
     public static <T> Result<T> fail(String message, T result) {
-        System.out.println("业务异常响应: " + message);
+        log.warn("业务异常响应: {} - {}", message, result);
         return new Result<>(ResultStatus.FAIL.getCode(), message, false, result);
     }
 
     public static <T> Result<T> fail(Integer code, String message, T result) {
-        System.out.println("业务异常响应: " + message);
+        log.warn("业务异常响应: [{}] {} - {}", code, message, result);
         return new Result<>(code, message, false, result);
     }
 
     public static <T> Result<T> noPrivilege() {
+        log.warn("业务异常响应: 403 NO PRIVILEGE");
         return new Result<>(ResultStatus.ACCESS_FAIL.getCode(), ResultStatus.ACCESS_FAIL.getMessage(), false);
     }
+
     public static <T> Result<T> noPrivilege(String message) {
+        log.warn("业务异常响应: 403 NO PRIVILEGE {}", message);
         return new Result<>(ResultStatus.ACCESS_FAIL.getCode(), message, false);
     }
 
     public static <T> Result<T> unauthorized() {
-        System.out.println("业务异常响应: Unauthorized");
+        log.warn("业务异常响应: 401 UNAUTHORIZED");
         return new Result<>(ResultStatus.AUTH_FAIL.getCode(), ResultStatus.AUTH_FAIL.getMessage(), false);
     }
 
     public static <T> Result<T> unauthorized(T url) {
-        System.out.println("业务异常响应: Unauthorized " + url);
+        log.warn("[{}] 业务异常响应: 401 UNAUTHORIZED {}", AuthContext.getTraceId(), url);
         return new Result<>(ResultStatus.AUTH_FAIL.getCode(), ResultStatus.AUTH_FAIL.getMessage(), false, url);
     }
 
-    public static <T> Result<T> noFound() {
-        System.out.println("业务异常响应: noFound");
-        return new Result<>(ResultStatus.NO_FOUND.getCode(), ResultStatus.NO_FOUND.getMessage(), false);
+    public static <T> Result<T> notfound() {
+        log.warn("业务异常响应: 404 NOTFOUND");
+        return new Result<>(ResultStatus.NOTFOUND.getCode(), ResultStatus.NOTFOUND.getMessage(), false);
     }
 
-    public static <T> Result<T> noFound(String message) {
-        System.out.println("业务异常响应: noFound");
-        return new Result<>(ResultStatus.NO_FOUND.getCode(), message, false);
+    public static <T> Result<T> notfound(String message) {
+        log.warn("业务异常响应: 404 NOTFOUND {}", message);
+        return new Result<>(ResultStatus.NOTFOUND.getCode(), message, false);
     }
 
 
     public static <T> Result<T> noToken() {
-        System.out.println("业务异常响应: noToken");
+        log.warn("业务异常响应: 401 NOT TOKEN");
         return new Result<>(ResultStatus.NO_TOKEN.getCode(), ResultStatus.NO_TOKEN.getMessage(), false);
     }
 
     public static <T> Result<T> illegalRequest() {
+        log.warn("[{}] 业务异常响应: 20002 非法请求", AuthContext.getTraceId());
         return new Result<>(ResultStatus.ILLEGAL_REQUEST.getCode(), ResultStatus.ILLEGAL_REQUEST.getMessage(), false);
     }
 

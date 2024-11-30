@@ -15,7 +15,7 @@ public enum ResultStatus {
     NO_TOKEN(401, "访问需要授权凭证"),
     ACCESS_FAIL(403, "无权访问"),
 
-    NO_FOUND(404, "数据不存在"),
+    NOTFOUND(404, "数据不存在"),
     FREQUENT_OPERATION(20001, "操作频繁"),
     ILLEGAL_REQUEST(20002, "非法请求"),
     SERVICE_BUSY(500, "系统繁忙");
