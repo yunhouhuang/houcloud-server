@@ -16,17 +16,22 @@ import java.util.Collections;
 
 /**
  * <p>
- *    代码生成
+ * 代码生成
  * </p>
+ *
  * @author <a href="mailto:yunhouhuang@gmail.com">yunhouhuang@gmail.com</a>
  */
 public class MyBatisPlusGenerator {
 
+    public static final String URL = "127.0.0.1:3306";
+    public static final String USERNAME = "root";
+    private static final String PASSWORD = "houcloud";
+    private static final String DATABASE = "houcloud_db";
 
     public static void main(String[] args) {
-        FastAutoGenerator.create("jdbc:mysql://127.0.0.1:3306/houcloud_db?characterEncoding=utf-8&useSSL=false&serverTimeZone=GMT+8", "root", "root")
+        FastAutoGenerator.create("jdbc:mysql://%s/%s?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimeZone=GMT+8".formatted(URL,DATABASE), USERNAME, PASSWORD)
                 .globalConfig(builder -> {
-                    builder.author("HOUCLOUD")
+                    builder.author("yunhouhuang@gmail.com") // 设置作
                             .enableSpringdoc() // 使用Spring文档
                             .disableOpenDir() // 关闭生成代码后自动打开目录
                             .outputDir("C:\\Users\\Administrator\\IdeaProjects\\houcloud-server\\src\\main\\java"); // 指定输出目录
@@ -35,11 +40,8 @@ public class MyBatisPlusGenerator {
                     builder
                             .enableSkipView()
                             .disableSqlFilter() // 禁用 SQL
-                            // 要生成的表
                             .addInclude(
-                                    "t_user",
-                                    "t_user_log",
-                                    "t_user_notice"
+                                    "t_user"
                             ) // 生成指定表。空则生成全部
                             .addTablePrefix("t_") // 过滤表名
                             .entityBuilder().enableFileOverride()// 实体类开启覆盖
@@ -48,11 +50,11 @@ public class MyBatisPlusGenerator {
                             .logicDeleteColumnName("deleted_at") // 逻辑删除字段
                             .addTableFills(new Property("updatedAt", FieldFill.INSERT_UPDATE))
                             .addTableFills(new Property("createdAt", FieldFill.INSERT))
-                            .addTableFills(new Property("name"))
                             .enableLombok()
                             .enableActiveRecord()
                             .idType(IdType.AUTO)
-                            .controllerBuilder().enableFileOverride().enableRestStyle() // 控制器代码覆盖
+                            .controllerBuilder().enableFileOverride().enableRestStyle()
+                            // 控制器代码覆盖
                             .build();
                 })
                 .packageConfig(builder -> builder.parent("com.houcloud")
@@ -63,18 +65,14 @@ public class MyBatisPlusGenerator {
                         .mapper("mapper")
                         .xml("mapperxml")
                         .controller("controller")
-                        .pathInfo(Collections.singletonMap(OutputFile.xml,"C:\\Users\\Administrator\\IdeaProjects\\houcloud-server\\src\\main\\resources\\mapperxml")
+                        // 这里如果需要xml需要配置路径
+                        .pathInfo(Collections.singletonMap(OutputFile.xml, "src/main/resources/mapperxml")
                         ).build())
-                .templateConfig(builder -> {
+                .strategyConfig(builder -> {
                     // 自定义模板
                     builder
-//                            .disable(TemplateType.ENTITY)
-                            .entity("templates/entity.java")
-//                            .service("templates\\service.java")
-//                            .serviceImpl("templates\\serviceImpl.java")
-//                            .mapper("templates\\mapper.java")
-//                            .xml("templates\\mapper.xml")
-                            .controller("templates/controller.java")
+                            .entityBuilder().javaTemplate("templates/entity.java")
+                            .controllerBuilder().template("templates/controller.java")
                             .build();
 
                 })

@@ -7,7 +7,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.houcloud.example.common.exception.BusinessException;
 import com.houcloud.example.common.security.permission.annotation.Permission;
 import com.houcloud.example.common.security.token.store.ContextUser;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -37,7 +37,7 @@ public class PermissionAspect {
         log.info("验证权限: {}", (Object) codeArray);
         if (ArrayUtil.isNotEmpty(codeArray)) {
             ArrayList<String> scopeCodes = CollUtil.toList(codeArray);
-            ContextUser contextUser = AuthUtil.getContextUser();
+            ContextUser contextUser = AuthContext.getContextUser();
             if (ObjectUtil.isNull(contextUser)) {
                 log.warn("当前凭证为空");
                 throw BusinessException.exception(403, "无权访问");

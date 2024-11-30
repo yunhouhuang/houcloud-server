@@ -41,7 +41,7 @@ public class CategoryController {
     public Result<Category> getCategory(@RequestParam Long id) {
         Category category = categoryService.getById(id);
         if (Objects.isNull(category)) {
-            return Result.noFound("分类未找到");
+            return Result.notfound("分类未找到");
         }
         return Result.success(category);
     }

@@ -47,7 +47,7 @@ public class UserManageController {
     public Result<UserResponse> getUser(@RequestParam Long id) {
         User user = userService.getById(id);
         if (Objects.isNull(user)) {
-            return Result.noFound("用户未找到");
+            return Result.notfound("用户未找到");
         }
         UserResponse response = BeanUtil.toBean(user, UserResponse.class);
         return Result.success(response);
@@ -75,7 +75,7 @@ public class UserManageController {
     public Result<User> setBlacklist(@RequestBody SetBoolBody<Long> body) {
         User user = userService.getById(body.getId());
         if (Objects.isNull(user)) {
-            return Result.noFound("用户未找到");
+            return Result.notfound("用户未找到");
         }
         boolean update = userService.lambdaUpdate().eq(User::getId, body.getId()).set(User::getBlacklist, body.getValue()).update();
         return update ? Result.success(user) : Result.fail();
@@ -88,7 +88,7 @@ public class UserManageController {
     public Result<User> setUserLock(@RequestBody SetBoolBody<Long> body) {
         User user = userService.getById(body.getId());
         if (Objects.isNull(user)) {
-            return Result.noFound("用户未找到");
+            return Result.notfound("用户未找到");
         }
         boolean update = userService.lambdaUpdate().eq(User::getId, body.getId()).set(User::getLocked, body.getValue()).update();
         return update ? Result.success(user) : Result.fail();

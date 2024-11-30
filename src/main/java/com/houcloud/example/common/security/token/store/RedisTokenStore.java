@@ -116,7 +116,7 @@ public class RedisTokenStore {
             ContextUser contextUser = new ContextUser();
             contextUser.setAdminId(adminToken.getAdminId());
             contextUser.setPermissions(adminToken.getPermissions());
-            AuthUtil.setContextUser(contextUser);
+            AuthContext.setContextUser(contextUser);
             return true;
         }
         return false;
@@ -135,7 +135,7 @@ public class RedisTokenStore {
             ContextUser contextUser = new ContextUser();
             contextUser.setUserId(frontToken.getUserId());
             contextUser.setPermissions(Collections.emptyList());
-            AuthUtil.setContextUser(contextUser);
+            AuthContext.setContextUser(contextUser);
             return true;
         }
         return false;

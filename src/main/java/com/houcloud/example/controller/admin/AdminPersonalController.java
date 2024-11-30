@@ -10,7 +10,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.houcloud.example.common.result.Result;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import com.houcloud.example.model.entity.Admin;
 import com.houcloud.example.model.entity.Role;
 import com.houcloud.example.model.response.AdminPersonResponse;
@@ -52,7 +52,7 @@ public class AdminPersonalController {
     @Operation(summary = "获取个人资料")
     @GetMapping
     public Result<AdminPersonResponse> getPersonalInfo() {
-        Long adminId = AuthUtil.getAdminId();
+        Long adminId = AuthContext.getAdminId();
         Admin admin = adminService.getById(adminId);
         if (Objects.isNull(admin)) {
             // 账号被删除注销等情况
@@ -69,7 +69,7 @@ public class AdminPersonalController {
     @Operation(summary = "修改个人资料")
     @PutMapping
     public Result<UserPersonalResponse> updatePersonalInfo(@RequestBody @Valid Admin admin) {
-        Long adminId = AuthUtil.getAdminId();
+        Long adminId = AuthContext.getAdminId();
         LambdaUpdateChainWrapper<Admin> wrapper = adminService.lambdaUpdate().eq(Admin::getId, adminId);
         boolean changed = false;
         if (StrUtil.isNotBlank(admin.getAvatar())) {

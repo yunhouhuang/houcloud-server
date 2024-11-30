@@ -3,11 +3,10 @@ package com.houcloud.example.controller.admin;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.houcloud.example.common.constants.RegexpEnums;
 import com.houcloud.example.common.result.Result;
 import com.houcloud.example.common.security.token.handler.AdminTokenHandler;
 import com.houcloud.example.common.security.token.model.AdminToken;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import com.houcloud.example.model.entity.Admin;
 import com.houcloud.example.model.request.PasswordLoginBody;
 import com.houcloud.example.service.IAdminService;
@@ -85,7 +84,7 @@ public class AdminLoginController {
     @Operation(summary = "退出登录")
     @DeleteMapping("/logout")
     public Result<AdminToken> logout() {
-        Long adminId = AuthUtil.tryGetAdminId();
+        Long adminId = AuthContext.tryGetAdminId();
         if (Objects.nonNull(adminId)) {
             adminTokenHandler.deleteTokenByAdminId(adminId);
         }

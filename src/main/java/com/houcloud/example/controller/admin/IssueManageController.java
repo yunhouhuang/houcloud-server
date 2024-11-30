@@ -41,7 +41,7 @@ public class IssueManageController {
         public Result<Issue> getIssue(@RequestParam Long id){
                 Issue issue = issueService.getById(id);
                 if (Objects.isNull(issue)){
-                    return Result.noFound("常见问题未找到");
+                    return Result.notfound("常见问题未找到");
                 }
                 return Result.success(issue);
         }

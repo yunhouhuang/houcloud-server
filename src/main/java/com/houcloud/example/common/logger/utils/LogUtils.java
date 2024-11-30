@@ -1,7 +1,7 @@
 package com.houcloud.example.common.logger.utils;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import com.houcloud.example.common.security.token.store.ContextUser;
 import com.houcloud.example.common.logger.RecordLog;
 import com.houcloud.example.utils.IpUtil;
@@ -42,7 +42,7 @@ public class LogUtils {
      * 获取用户名称
      */
     private void setId(RecordLog recordLog) {
-        ContextUser contextUser = AuthUtil.getContextUser();
+        ContextUser contextUser = AuthContext.getContextUser();
         if (ObjectUtil.isNull(contextUser)) {
             return;
         }

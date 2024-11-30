@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.houcloud.example.common.result.Result;
 import com.houcloud.example.common.security.interceptor.authorize.Authorize;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import com.houcloud.example.model.entity.Feedback;
 import com.houcloud.example.model.request.IdBody;
 import com.houcloud.example.model.request.PageListParams;
@@ -38,10 +38,10 @@ public class FeedbackController {
         @Operation(summary = "获取意见反馈详情")
         @GetMapping
         public Result<Feedback> getFeedback(@RequestParam Long id){
-                Long userId = AuthUtil.getUserId();
+                Long userId = AuthContext.getUserId();
                 Feedback feedback = feedbackService.getOne(Wrappers.<Feedback>lambdaQuery().eq(Feedback::getUserId, userId).eq(Feedback::getId, id));
                 if (Objects.isNull(feedback)){
-                    return Result.noFound("意见反馈未找到");
+                    return Result.notfound("意见反馈未找到");
                 }
                 return Result.success(feedback);
         }
@@ -50,7 +50,7 @@ public class FeedbackController {
         @Operation(summary = "获取意见反馈列表")
         @GetMapping("/list")
         public Result<Page<Feedback>> getFeedbackList(PageListParams params){
-                Long userId = AuthUtil.getUserId();
+                Long userId = AuthContext.getUserId();
                 LambdaQueryWrapper<Feedback> wrapper = Wrappers.<Feedback>lambdaQuery().orderByDesc(Feedback::getCreatedAt);
                 wrapper.eq(Feedback::getUserId,userId);
                 Page<Feedback> feedbackPage = feedbackService.page(Page.of(params.getPage(), params.getLimit()), wrapper);
@@ -61,7 +61,7 @@ public class FeedbackController {
         @Operation(summary = "添加意见反馈")
         @PostMapping
         public Result<Feedback> addFeedback(@RequestBody Feedback feedback){
-                Long userId = AuthUtil.getUserId();
+                Long userId = AuthContext.getUserId();
                 feedback.setUserId(userId);
                 boolean save = feedbackService.save(feedback);
                 return save?Result.success(feedback):Result.fail();
@@ -71,7 +71,7 @@ public class FeedbackController {
         @Operation(summary = "删除意见反馈")
         @DeleteMapping
         public Result<Feedback> deleteFeedback(@Valid @RequestBody IdBody<Long> idBody){
-                Long userId = AuthUtil.getUserId();
+                Long userId = AuthContext.getUserId();
                 Feedback feedback = feedbackService.getOne(Wrappers.<Feedback>lambdaQuery().eq(Feedback::getUserId, userId).eq(Feedback::getId, idBody.getId()));
                 if (Objects.isNull(feedback)){
                 return Result.fail("意见反馈不存在");

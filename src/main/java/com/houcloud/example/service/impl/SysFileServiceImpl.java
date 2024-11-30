@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.houcloud.example.common.exception.BusinessException;
 import com.houcloud.example.common.oss.FileDetails;
 import com.houcloud.example.common.oss.OssService;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import com.houcloud.example.mapper.SysFileMapper;
 import com.houcloud.example.model.entity.SysFile;
 import com.houcloud.example.service.ISysFileService;
@@ -31,7 +31,7 @@ public class SysFileServiceImpl extends ServiceImpl<SysFileMapper, SysFile> impl
     private OssService ossService;
     @Override
     public SysFile uploadFile(MultipartFile file) {
-        Long userId = AuthUtil.getAdminId();
+        Long userId = AuthContext.getAdminId();
         byte[] fileByte;
         String oldFileName = file.getOriginalFilename();
         try {

@@ -58,7 +58,7 @@ public class RoleController {
     public Result<RoleResponse> getRole(@RequestParam Long id) {
         Role role = roleService.getById(id);
         if (Objects.isNull(role)) {
-            return Result.noFound("角色未找到");
+            return Result.notfound("角色未找到");
         }
         RoleResponse roleResponse = BeanUtil.toBean(role, RoleResponse.class);
         List<RoleMenuRef> roleMenuRefs = roleMenuRefService.list(Wrappers.<RoleMenuRef>lambdaQuery().eq(RoleMenuRef::getRoleId, role.getId()));

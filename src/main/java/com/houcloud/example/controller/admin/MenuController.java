@@ -49,7 +49,7 @@ public class MenuController {
     public Result<Menu> getMenu(@RequestParam Long id) {
         Menu menu = menuService.getById(id);
         if (Objects.isNull(menu)) {
-            return Result.noFound("菜单未找到");
+            return Result.notfound("菜单未找到");
         }
         return Result.success(menu);
     }

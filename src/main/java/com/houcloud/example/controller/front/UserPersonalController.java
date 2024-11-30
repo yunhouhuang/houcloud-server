@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWra
 import com.houcloud.example.common.constants.Constants;
 import com.houcloud.example.common.result.Result;
 import com.houcloud.example.common.security.interceptor.authorize.Authorize;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import com.houcloud.example.ext.wechat.model.WechatMobileAuthBody;
 import com.houcloud.example.ext.wechat.service.WechatAuthorizeService;
 import com.houcloud.example.model.entity.User;
@@ -57,7 +57,7 @@ public class UserPersonalController {
     @Operation(summary = "获取个人资料")
     @GetMapping
     public Result<UserPersonalResponse> getPersonalInfo() {
-        Long userId = AuthUtil.getUserId();
+        Long userId = AuthContext.getUserId();
         User user = userService.getById(userId);
         if (Objects.isNull(user)) {
             return Result.unauthorized();
@@ -71,7 +71,7 @@ public class UserPersonalController {
     @Operation(summary = "修改个人资料")
     @PutMapping
     public Result<UserPersonalResponse> updatePersonalInfo(@RequestBody @Valid User user) {
-        Long userId = AuthUtil.getUserId();
+        Long userId = AuthContext.getUserId();
         LambdaUpdateChainWrapper<User> wrapper = userService.lambdaUpdate().eq(User::getId, userId);
         int setCount = 0;
         if (StrUtil.isNotBlank(user.getAvatar())) {
@@ -91,7 +91,7 @@ public class UserPersonalController {
     @Operation(summary = "绑定微信手机号")
     @PostMapping("/mobile")
     public Result<UserPersonalResponse> updateMobile(@RequestBody @Valid WechatMobileAuthBody body) {
-        Long userId = AuthUtil.getUserId();
+        Long userId = AuthContext.getUserId();
         String mobile = wechatAuthorizeService.checkBindingPhone(body);
         if (!MobileUtil.isMobile(mobile)) {
             return Result.fail("暂不支持此号码");
@@ -109,7 +109,7 @@ public class UserPersonalController {
     @Operation(summary = "设置实名信息")
     @PutMapping("/certificate")
     public Result<UserPersonalResponse> updateCertificate(@RequestBody @Valid User user) {
-        Long userId = AuthUtil.getUserId();
+        Long userId = AuthContext.getUserId();
         userService.lambdaUpdate()
                 .eq(User::getId, userId)
                 .set(User::getRealName, user.getRealName())

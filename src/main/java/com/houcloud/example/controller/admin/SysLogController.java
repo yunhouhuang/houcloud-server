@@ -52,7 +52,7 @@ public class SysLogController {
     public Result<SysLog> getSysLog(@RequestParam Long id) {
         SysLog sysLog = sysLogService.getById(id);
         if (Objects.isNull(sysLog)) {
-            return Result.noFound("系统日志未找到");
+            return Result.notfound("系统日志未找到");
         }
         return Result.success(sysLog);
     }

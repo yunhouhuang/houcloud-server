@@ -1,7 +1,7 @@
 package com.houcloud.example.common.security.filter;
 
 
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import jakarta.servlet.*;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ public class ResponseFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         // 清除线程中的用户信息，防止特殊情况下线程复用导致错误。
-        AuthUtil.clearContextUser();
+        AuthContext.clearContextUser();
         // 暂时不处理，直接返回
         filterChain.doFilter(request, response);
     }

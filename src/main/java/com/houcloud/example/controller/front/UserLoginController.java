@@ -7,7 +7,7 @@ import com.houcloud.example.common.notice.dingtalk.DingTalkMessage;
 import com.houcloud.example.common.result.Result;
 import com.houcloud.example.common.security.token.handler.FrontTokenHandler;
 import com.houcloud.example.common.security.token.model.FrontToken;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import com.houcloud.example.ext.wechat.model.AppletAuthorizeResponse;
 import com.houcloud.example.ext.wechat.model.UserInfo;
 import com.houcloud.example.ext.wechat.model.WechatAppletLoginBody;
@@ -136,7 +136,7 @@ public class UserLoginController {
 
     @GetMapping("/login/state")
     public Result<Long> getLoginState() {
-        Long userId = AuthUtil.tryGetUserId();
+        Long userId = AuthContext.tryGetUserId();
         return Result.success(userId);
     }
 
@@ -144,7 +144,7 @@ public class UserLoginController {
     @Operation(summary = "退出登录")
     @DeleteMapping("/logout")
     public Result<Void> logout() {
-        Long userId = AuthUtil.tryGetUserId();
+        Long userId = AuthContext.tryGetUserId();
         if (Objects.nonNull(userId)) {
             frontTokenHandler.deleteTokenByDeveloperId(userId);
         }

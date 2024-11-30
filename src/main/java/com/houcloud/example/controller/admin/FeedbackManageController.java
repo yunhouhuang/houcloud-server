@@ -41,7 +41,7 @@ public class FeedbackManageController {
         public Result<Feedback> getFeedback(@RequestParam Long id){
                 Feedback feedback = feedbackService.getById(id);
                 if (Objects.isNull(feedback)){
-                    return Result.noFound("意见反馈未找到");
+                    return Result.notfound("意见反馈未找到");
                 }
                 return Result.success(feedback);
         }

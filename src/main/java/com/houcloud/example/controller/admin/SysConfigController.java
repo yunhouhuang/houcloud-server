@@ -41,7 +41,7 @@ public class SysConfigController {
     public Result<SysConfig> getSysConfig(@RequestParam Long id) {
         SysConfig sysConfig = sysConfigService.getById(id);
         if (Objects.isNull(sysConfig)) {
-            return Result.noFound("系统变量配置未找到");
+            return Result.notfound("系统变量配置未找到");
         }
         return Result.success(sysConfig);
     }

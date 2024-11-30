@@ -14,7 +14,7 @@ import com.houcloud.example.common.logger.annotation.Logger;
 import com.houcloud.example.common.result.Result;
 import com.houcloud.example.common.security.permission.annotation.Permission;
 import com.houcloud.example.common.security.token.handler.AdminTokenHandler;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import com.houcloud.example.model.entity.Admin;
 import com.houcloud.example.model.entity.AdminRoleRef;
 import com.houcloud.example.model.entity.Role;
@@ -68,7 +68,7 @@ public class AdminManageController {
     public Result<AdminResponse> getAdmin(@RequestParam Long id) {
         Admin admin = adminService.getById(id);
         if (Objects.isNull(admin)) {
-            return Result.noFound("管理员未找到");
+            return Result.notfound("管理员未找到");
         }
         AdminResponse adminResponse = BeanUtil.toBean(admin, AdminResponse.class);
         List<Role> roleList = roleService.getRoleListByAdminId(id);
@@ -106,7 +106,7 @@ public class AdminManageController {
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
     public Result<Admin> addAdmin(@Valid @RequestBody AddAdminBody body) {
-        Long adminId = AuthUtil.getAdminId();
+        Long adminId = AuthContext.getAdminId();
         Admin myInfo = adminService.getById(adminId);
         if (!myInfo.getIsCreator()) {
             return Result.fail("无权操作");
@@ -170,14 +170,14 @@ public class AdminManageController {
     @Operation(summary = "更新管理员")
     @PutMapping
     public Result<Void> updateAdmin(@Valid @RequestBody UpdateAdminBody body) {
-        Long adminId = AuthUtil.getAdminId();
+        Long adminId = AuthContext.getAdminId();
         Admin myInfo = adminService.getById(adminId);
         if (!myInfo.getIsCreator()) {
             return Result.fail("无权操作");
         }
         Admin byId = adminService.getById(body.getId());
         if (Objects.isNull(byId)) {
-            return Result.noFound();
+            return Result.notfound();
         }
         LambdaUpdateChainWrapper<Admin> wrapper = adminService.lambdaUpdate().eq(Admin::getId, body.getId());
         if (body.getNickname().length() > 32) {
@@ -196,7 +196,7 @@ public class AdminManageController {
             if (!checkPwd(body.getPassword())) {
                 return Result.fail("请规范密码长度6~20位之间");
             }
-            if (!AuthUtil.hasPermission("admin:update:password") && !adminId.equals(body.getId())) {
+            if (!AuthContext.hasPermission("admin:update:password") && !adminId.equals(body.getId())) {
                 return Result.fail("您无权修改管理员密码");
             }
             log.info("管理员{}修改了{}的密码", adminId, body.getId());
@@ -224,7 +224,7 @@ public class AdminManageController {
     @Operation(summary = "删除管理员")
     @DeleteMapping
     public Result<Admin> deleteAdmin(@Valid @RequestBody IdBody<Long> idBody) {
-        Long adminId = AuthUtil.getAdminId();
+        Long adminId = AuthContext.getAdminId();
         Admin myInfo = adminService.getById(adminId);
         if (!myInfo.getIsCreator()) {
             return Result.fail("无权操作");
@@ -248,14 +248,14 @@ public class AdminManageController {
     @Permission("admin:lock")
     @Logger("锁定或解除锁定")
     public Result<Admin> setUserLock(@RequestBody SetBoolBody<Long> body) {
-        Long adminId = AuthUtil.getAdminId();
+        Long adminId = AuthContext.getAdminId();
         Admin me = adminService.getById(adminId);
         if (!me.getIsCreator()) {
             return Result.fail("只有创始人可操作");
         }
         Admin admin = adminService.getById(body.getId());
         if (Objects.isNull(admin)) {
-            return Result.noFound("管理员未找到");
+            return Result.notfound("管理员未找到");
         }
         if (admin.getIsCreator()) {
             return Result.fail("创始人账号不可锁定");

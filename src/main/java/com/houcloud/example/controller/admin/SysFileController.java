@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.houcloud.example.common.logger.annotation.Logger;
 import com.houcloud.example.common.result.Result;
 import com.houcloud.example.common.security.permission.annotation.Permission;
-import com.houcloud.example.common.security.token.store.AuthUtil;
 import com.houcloud.example.model.entity.SysFile;
 import com.houcloud.example.model.request.IdBody;
 import com.houcloud.example.model.request.PageListParams;
@@ -16,7 +15,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,7 +43,7 @@ public class SysFileController {
     public Result<SysFile> getSysFile(@RequestParam Long id) {
         SysFile sysFile = sysFileService.getById(id);
         if (Objects.isNull(sysFile)) {
-            return Result.noFound("系统文件未找到");
+            return Result.notfound("系统文件未找到");
         }
         return Result.success(sysFile);
     }

@@ -40,7 +40,7 @@ public class UserLogController {
     public Result<UserLog> getUserLog(@RequestParam Long id) {
         UserLog userLog = userLogService.getById(id);
         if (Objects.isNull(userLog)) {
-            return Result.noFound("用户日志未找到");
+            return Result.notfound("用户日志未找到");
         }
         return Result.success(userLog);
     }

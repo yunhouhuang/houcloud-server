@@ -10,7 +10,7 @@ import com.google.common.collect.Sets;
 import com.houcloud.example.common.constants.Constants;
 import com.houcloud.example.common.exception.BusinessException;
 import com.houcloud.example.common.security.token.handler.AdminTokenHandler;
-import com.houcloud.example.common.security.token.store.AuthUtil;
+import com.houcloud.example.common.security.token.store.AuthContext;
 import com.houcloud.example.mapper.MenuMapper;
 import com.houcloud.example.model.entity.AdminRoleRef;
 import com.houcloud.example.model.entity.Menu;
@@ -68,7 +68,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Override
     public List<MenuTree> getMenuTree(Boolean lazy,Boolean all, Long parentId) {
-        Long adminId = AuthUtil.getContextUser().getAdminId();
+        Long adminId = AuthContext.getContextUser().getAdminId();
         List<AdminRoleRef> adminRoleRefs = adminRoleRefService.list(Wrappers.<AdminRoleRef>lambdaQuery().eq(AdminRoleRef::getAdminId, adminId));
         if (CollUtil.isEmpty(adminRoleRefs)) {
             return Collections.emptyList();
@@ -116,7 +116,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean addMenu(Menu menu) {
-        Long adminId = AuthUtil.getAdminId();
+        Long adminId = AuthContext.getAdminId();
         verifyMenu(menu,0L);
         boolean save = save(menu);
         List<Role> roleList = roleService.getRoleListByAdminId(adminId);

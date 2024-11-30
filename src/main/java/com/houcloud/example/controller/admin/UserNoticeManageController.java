@@ -40,7 +40,7 @@ public class UserNoticeManageController {
     public Result<UserNotice> getUserNotice(@RequestParam Long id) {
         UserNotice userNotice = userNoticeService.getById(id);
         if (Objects.isNull(userNotice)) {
-            return Result.noFound("用户消息通知未找到");
+            return Result.notfound("用户消息通知未找到");
         }
         return Result.success(userNotice);
     }
